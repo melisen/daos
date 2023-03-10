@@ -1,11 +1,16 @@
+const logger = require("../../../logger/winston-logger");
 const {MongoUsuarios, Usuarios} = require("./MongoDAOusuarios");
 
 
 
 class DAOFactoryUsuarios{
     constructor(PERSISTENCIA){
-      this.PERSISTENCIA = PERSISTENCIA
-    
+      if (DAOFactoryUsuarios._instance) {
+        logger.log("error", "Singleton classes can't be instantiated more than once.")
+      }
+      DAOFactoryUsuarios._instance = this;
+
+      this.PERSISTENCIA = PERSISTENCIA    
       switch (this.PERSISTENCIA) {
         case "MONGO":
           return new MongoUsuarios(Usuarios);

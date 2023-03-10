@@ -1,3 +1,4 @@
+const logger = require("../../../logger/winston-logger");
 const {MongoDAOproductos, ProdModel} = require("./MongoDAOproductos")
 const MemoryDAOproductos = require("./MemoryDAOproductos")
 const FileDAOproductos = require("./FileDAOproductos")
@@ -6,6 +7,11 @@ const FileDAOproductos = require("./FileDAOproductos")
 
 class DAOFactoryProductos{
     constructor(PERSISTENCIA){
+      if (DAOFactoryProductos._instance) {
+        logger.log("error", "Singleton classes can't be instantiated more than once.")
+      }
+      DAOFactoryProductos._instance = this;
+    
       this.PERSISTENCIA = PERSISTENCIA
       switch (this.PERSISTENCIA) {
         case "MEM":
@@ -17,6 +23,7 @@ class DAOFactoryProductos{
         default:
           return new MongoDAOproductos(ProdModel);
       }
+
     }
   }
  

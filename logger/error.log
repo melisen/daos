@@ -192,3 +192,4 @@
 {"level":"error","message":"no se puedo acceder a lista de productos o no existe el carrito en el user"}
 {"level":"error","message":"no encontrado"}
 {"level":"error","message":"no se puedo acceder a lista de productos"}
+{"level":"error","message":"Singleton classes can't be instantiated more than once."}

@@ -8,6 +8,7 @@ class DAOFactoryCarrito{
     constructor(PERSISTENCIA){
       if (DAOFactoryCarrito._instance) {
         logger.log("error", "Singleton classes can't be instantiated more than once.")
+        throw new Error("Singleton classes can't be instantiated more than once.")
       }
       DAOFactoryCarrito._instance = this;
 

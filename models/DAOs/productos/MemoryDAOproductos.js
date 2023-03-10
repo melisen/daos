@@ -23,9 +23,9 @@ class MemoryDAOproductos{
 
     saveNew(ob){
         try{
-            const productos = this.AllProducts();
+            const productos = this.getAll();
             let _id;
-            if (!productos || !productos.lenght){
+            if (!productos || !productos.length){
                 _id =1
             }else{
                 productos.forEach( ob =>{
@@ -33,17 +33,19 @@ class MemoryDAOproductos{
                 });
                 _id = _id+1
             }
-            const guardar = productos.lenght ? [...productos, {...ob, _id}] : [{...ob, _id}];
+            const nuevo = {...ob, _id}
+            const guardar = productos.length ? [...productos, nuevo] : [nuevo];
             this.arrMem = guardar;
             logger.log("info", "nuevo producto guardado")
+            return _id
         }
         catch(error){
-            logger.log("error", error)
+            logger.log("error", "no se pudo guardar")
         }
     }
     async deleteById(idprod){
         try{
-            const objs =  this.arrMem;
+            const objs =  this.getAll();
             const obj = objs.find((item)=> item._id == idprod)
             if (!obj){
                 logger.log("error", 'No se encontró qué borrar')
@@ -73,7 +75,7 @@ class MemoryDAOproductos{
             category
         }
         try{ 
-            const objs = this.arrMem;
+            const objs = this.getAll();
             const quitarObj = objs.filter((item)=> item._id != idprod);
             const newArr = [...quitarObj, newObj];
             this.arrMem = newArr;

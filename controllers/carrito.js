@@ -8,6 +8,8 @@
     confirmOrder
  } = require("../services/carrito")
 
+
+
   const createCartController = async (req, res)=>{
     const {username} = req.user;
     await createCart(username)
@@ -35,13 +37,21 @@ const getProductsController = async (req, res)=>{
     const user = req.user;
     const username = user.username;
     const id = user.carritoactual;
-    const productosMap = await getProducts(id)
-    if(productosMap){
-     res.render("carrito", {productosMap, id, username});
-     logger.log("info", "/api/carrito/:id/productos - GET")
+    if(id!="empty"){
+      const productosMap = await getProducts(id)
+      if(productosMap){
+       res.render("carrito", {productosMap, id, username});
+       logger.log("info", "/api/carrito/:id/productos - GET")
+      }else{
+       logger.log("error", "no se puedo acceder a lista de productos")
+      }
     }else{
-     logger.log("error", "no se puedo acceder a lista de productos")
+      const msgEmptyCart = "El carrito aún no tiene productos"
+      res.render("carrito", {msgEmptyCart})
     }
+      
+
+
   }catch(err){
   logger.log("error", "no se puedo acceder a lista de productos o no existe el carrito en el user")
   }

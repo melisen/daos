@@ -44,7 +44,7 @@ class MongoUsuarios{
   async updateSetEmptyCart(username){
     const emptyCart = await this.modelo.findOneAndUpdate(
       {username: username},
-      { $set: {carritoactual: "vacío"}})
+      { $set: {carritoactual: "empty"}})
   }
 
 

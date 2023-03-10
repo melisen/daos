@@ -24,6 +24,7 @@ const addProductToCart = async (objetoProd, idcarrito)=>{
     const idProd = objetoProd._id;
     const isProd = await DAOcarrito.findProdInCart(idcarrito, idProd);
     if(isProd){
+        logger.log("info", `isProd ${isProd}`)
         let cantPrevia = parseInt(isProd.quantity);
         let cantSumar = parseInt(objetoProd.quantity)
         await DAOcarrito.addRepeatedProd(idProd, cantPrevia, cantSumar, idcarrito)

@@ -43,7 +43,6 @@ const {
     const getProductController = async (req, res)=>{
       
         const {id} = req.params;
-        console.log("id params", (id))
         const prod = await getProduct(id)
         const idcarrito = req.user.carritoactual
         res.render("detalle-producto", {data:{idcarrito, prod}})
@@ -53,7 +52,7 @@ const {
     const keepShoppingController = async (req, res)=>{ 
         const user = req.user;
         const carrito = user.carritoactual; 
-        if(carrito != "vacío"){             
+        if(carrito != "empty"){             
         res.redirect("/api/productos")
         logger.log("info", "/api/productos/seguir-comprando - GET  keepShoppingController")
         }

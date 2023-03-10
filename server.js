@@ -143,7 +143,7 @@ passport.use(
           direccion: req.body.direccion,
           telefono: req.body.telefono,
           avatar: req.body.avatar,
-          carritoactual: "vacío"
+          carritoactual: "empty"
         };
         Usuarios.create(newUser, (err, userWithId) => {
           if (err) {

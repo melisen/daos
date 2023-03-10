@@ -6,22 +6,26 @@ class FileDAOcarrito {
         this.ruta = ruta;        
     }    
 
-    async saveNew(objProd){
+    async saveNew(){        
         try{
             const objs = await this.getAll();
+            console.log("saveNew objs", objs)
             let _id;
-            if (!objs || !objs.lenght){
+            if (!objs || !objs.length){
                 _id =1
             }else{
-                objs.forEach( ob =>{
-                    _id  = ob._id
-                });
+                objs.forEach( ob =>{ _id  = ob._id });
                 _id = _id+1
-            }            
-            const guardar = objs.lenght ? [...objs, {...objProd, _id}] :[{...objProd, _id}]
-            logger.log("info", guardar)
+            }      
+            const nuevoCarrito = {
+                productos:[],
+                 _id: _id
+                };
+            objs.push(nuevoCarrito)
+            const guardar = objs;
             const guardado = await fs.promises.writeFile(this.ruta, JSON.stringify(guardar), {encoding:'utf-8'})
-            logger.log("info", "guardado")
+            logger.log("info", `guardado  ${nuevoCarrito._id}`)
+            return _id
         }
         catch(error){
             logger.log("error", "no se pudo guardar")
@@ -30,14 +34,11 @@ class FileDAOcarrito {
 
     async getAll(){
         try{
-            const objetos = await fs.promises.readFile(this.ruta, 'utf-8');
-            console.log(objetos)
-            if(!objetos.length){
-            return []
-            }else{
+            const objetos = await fs.promises.readFile(this.ruta, 'utf-8');            
+
                 const res = await JSON.parse(objetos);
-                return res
-            }           
+                console.log("getAll res", res)
+                return res        
         }
         catch(err){
             logger.log("error", "no se pudo obtener")
@@ -46,9 +47,12 @@ class FileDAOcarrito {
 
     async findById(_id){
         const todos = await this.getAll()
+        console.log("todos en findById", todos)
         const buscado = todos.find(ob => ob._id == _id);
             if(buscado){
-                return buscado
+                console.log("findById", buscado)
+                return buscado               
+                
             }else{
                 logger.log("error", "no encontrado")
             }
@@ -94,13 +98,17 @@ class FileDAOcarrito {
 
     async AddProdToCart(objetoProd, id){
         try{ 
-            const carrito = this.findById(id)
-            const newCarrito = carrito.productos.push(objetoProd)
+            const carrito = await this.findById(id)
+            console.log("AddProdToCart carrito", carrito)
+            const arrProd = carrito.productos;
+            arrProd.push(objetoProd);
+            carrito.productos = arrProd;
             const carritos = await this.getAll();
             const quitarObj = carritos.filter((item)=> item._id != id)
-            const newArr = [...quitarObj, newCarrito];
+            const newArr = [...quitarObj, carrito];
+            console.log( "addProdToCart newArr", newArr)
             await fs.promises.writeFile(this.ruta, JSON.stringify(newArr), { encoding: 'utf-8'})
-            return newCarrito
+            return carrito
         } 
         catch (error) {
             logger.log("error", error)
@@ -126,6 +134,7 @@ class FileDAOcarrito {
         const todosCarritos = await this.getAll();
         const quitarCArrito = todosCarritos.filter((item)=> item._id != idcarrito)
         const newArrCarritos = [...quitarCArrito, carrito];
+        logger.log("info", `addRepeatedProd newArrCarritos ${newArrCarritos}`)
         await fs.promises.writeFile(this.ruta, JSON.stringify(newArrCarritos), { encoding: 'utf-8'})
     }
 
@@ -133,9 +142,9 @@ class FileDAOcarrito {
         const carrito = await this.findById(id);
         const arrProductos = carrito.productos; 
         const quitarProd = arrProductos.filter((item)=> item._id != idprod)
-        carrito.productos = arrProductos;
+        carrito.productos = quitarProd;
         const todosCarritos = await this.getAll();
-        const quitarCArrito = todosCarritos.filter((item)=> item._id != idcarrito)
+        const quitarCArrito = todosCarritos.filter((item)=> item._id != id)
         const newArrCarritos = [...quitarCArrito, carrito];
         await fs.promises.writeFile(this.ruta, JSON.stringify(newArrCarritos), { encoding: 'utf-8'})
 

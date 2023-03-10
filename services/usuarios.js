@@ -1,8 +1,10 @@
 const logger = require("../logger/winston-logger");
+
 const config = require("../config")
 const PERSISTENCIAUSUARIOS = config.PERSISTENCIAUSUARIOS;
 const DAOFactoryUsuarios = require("../models/DAOs/usuarios/DAOfactory-usuarios")
 const DAOusuarios = new DAOFactoryUsuarios(PERSISTENCIAUSUARIOS);
+
 const {sendNewRegisterToAdmin} = require("../external-services/nodemailer")
 
 const createUser = async(obj)=>{

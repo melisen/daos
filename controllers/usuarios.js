@@ -10,9 +10,10 @@ const {
 const getLoginController = (req, res)=>{
     logger.log("info", "/login - GET")
     if (req.isAuthenticated()) {
-        const { username, password, telefono, nombre, apellido, avatar, edad, direccion  } = req.user;
-        const user = { username, password, telefono, nombre, apellido, avatar, edad, direccion  };
+        const { username, password, telefono, nombre, apellido, avatar, edad, direccion, carritoactual  } = req.user;
+        const user = { username, password, telefono, nombre, apellido, avatar, edad, direccion, carritoactual  };
         res.render("profileUser", { user });
+        console.log(user.carritoactual)
       } else {
         res.render("login");
       }

@@ -9,8 +9,9 @@ class FileDAOproductos {
     async saveNew(objProd){
         try{
             const objs = await this.getAll();
+            console.log(objs.length)
             let _id;
-            if (!objs || !objs.lenght){
+            if (!objs || !objs.length){
                 _id =1
             }else{
                 objs.forEach( ob =>{
@@ -18,7 +19,7 @@ class FileDAOproductos {
                 });
                 _id = _id+1
             }            
-            const guardar = objs.lenght ? [...objs, {...objProd, _id}] :[{...objProd, _id}]
+            const guardar = objs.length>0 ? [...objs, {...objProd, _id}] :[{...objProd, _id}]
             logger.log("info", guardar)
             const guardado = await fs.promises.writeFile(this.ruta, JSON.stringify(guardar), {encoding:'utf-8'})
             logger.log("info", "guardado")
@@ -31,12 +32,12 @@ class FileDAOproductos {
     async getAll(){
         try{
             const objetos = await fs.promises.readFile(this.ruta, 'utf-8');
-            console.log(objetos)
             if(!objetos.length){
             return []
             }else{
                 const res = await JSON.parse(objetos);
                 return res
+                
             }           
         }
         catch(err){
